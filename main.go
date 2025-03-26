@@ -28,10 +28,12 @@ func main() {
 
 	results, err := os.Create(outputFile)
 	failOnErr(err)
+	ranCommand:= false
 	if strings.Contains(commands, "getPrDetails") {
 		verifyPluginParameters([]string{"PLUGIN_PR_NUMBER"})
 		fields := getPullRequest(client, &ctx, repositoryName, repositoryOwner, os.Getenv("PLUGIN_PR_NUMBER"))
 		writeResult(results, fields)
+		ranCommand=true
 	}
 	if strings.Contains(commands, "getChangedFiles") {
 		verifyPluginParameters([]string{"PLUGIN_PR_NUMBER"})
@@ -39,11 +41,13 @@ func main() {
 		//writeResult(*results, prFields)
 		fields := getChanges(client, &ctx, repositoryName, repositoryOwner, prFields["BASE_SHA"], prFields["HEAD_SHA"])
 		writeResult(results, fields)
+		ranCommand=true
 	}
 	if strings.Contains(commands, "setTag") {
 		verifyPluginParameters([]string{"PLUGIN_TAG_NAME", "PLUGIN_SHA"})
 		tagName := "refs/tags/" + os.Getenv("PLUGIN_TAG_NAME")
 		updateCreateTag(client, &ctx, repositoryName, repositoryOwner, tagName, os.Getenv("PLUGIN_SHA"))
+		ranCommand=true
 	}
 	if strings.Contains(commands, "createPullRequest") {
 		verifyPluginParameters([]string{"PLUGIN_PR_SOURCE_BRANCH", "PLUGIN_PR_TARGET_BRANCH", "PLUGIN_PR_TITLE", "PLUGIN_PR_BODY"})
@@ -54,12 +58,14 @@ func main() {
 			os.Getenv("PLUGIN_PR_BODY"),
 			os.Getenv("PLUGIN_PR_LABELS"))
 		writeResult(results, fields)
+		ranCommand=true
 	}
 	if strings.Contains(commands, "AddPullRequestLabels") {
 		verifyPluginParameters([]string{"PLUGIN_PR_NUMBER", "PLUGIN_PR_LABELS"})
 		addPullRequestLabels(client, &ctx, repositoryName, repositoryOwner,
 			os.Getenv("PLUGIN_PR_NUMBER"),
 			os.Getenv("PLUGIN_PR_LABELS"))
+		ranCommand=true
 	}
 	if strings.Contains(commands, "setStatusCheck") {
 		verifyPluginParameters([]string{"PLUGIN_STATUS_CHECK_SHA",
@@ -73,11 +79,13 @@ func main() {
 			os.Getenv("PLUGIN_STATUS_CHECK_STATUS"),
 			os.Getenv("PLUGIN_STATUS_CHECK_URL"),
 			os.Getenv("PLUGIN_STATUS_CHECK_DESCRIPTION"))
+		ranCommand=true
 	}
 	if strings.Contains(commands, "getStatuses") {
 		verifyPluginParameters([]string{"PLUGIN_REF"})
 		fields := listStatusChecks(client, &ctx, repositoryName, repositoryOwner, os.Getenv("PLUGIN_REF"))
 		writeResult(results, fields)
+		ranCommand=true
 	}
 	if strings.Contains(commands, "waitForStatus") {
 		verifyPluginParameters([]string{"PLUGIN_REF", "PLUGIN_STATUS_CHECK_CONTEXT"})
@@ -86,18 +94,24 @@ func main() {
 			os.Getenv("PLUGIN_STATUS_CHECK_CONTEXT"),
 			os.Getenv("PLUGIN_STATUS_CHECK_WAIT_TIMEOUT"))
 		writeResult(results, fields)
+		ranCommand=true
 	}
 	if strings.Contains(commands, "mergePr") {
 		verifyPluginParameters([]string{"PLUGIN_PR_NUMBER"})
 		mergePullRequest(client, &ctx, repositoryName, repositoryOwner,
 			os.Getenv("PLUGIN_PR_NUMBER"),
 			os.Getenv("PLUGIN_MERGE_COMMENT"))
+		ranCommand=true
 	}
 	if strings.Contains(commands, "getRef") {
 		verifyPluginParameters([]string{"PLUGIN_REF"})
 		fields := getRef(client, &ctx, repositoryName, repositoryOwner, os.Getenv("PLUGIN_REF"))
 		writeResult(results, fields)
+		ranCommand=true
 	}
+    if !ranCommand{
+        fmt.Print("Never ran any commands")
+    }
 	results.Close()
 
 	out, err := exec.Command("cp", "-v", outputFile, copyOutputFile).Output()

@@ -8,11 +8,15 @@ import (
 )
 
 func verifyPluginParameters(variables []string) {
+	var missing []string
 	for _, v := range variables {
 		if _, ok := os.LookupEnv(v); !ok {
-			log.Fatal(fmt.Sprintf("Some of required environment variables are not set (%s)",
-				strings.ReplaceAll(strings.Join(variables, " "), "PLUGIN_", "")))
+			missing = append(missing, strings.TrimPrefix(v, "PLUGIN_"))
 		}
+	}
+
+	if len(missing) > 0 {
+		log.Fatal(fmt.Sprintf("Some required environment variables are not set (%s)", strings.Join(missing, " ")))
 	}
 }
 
