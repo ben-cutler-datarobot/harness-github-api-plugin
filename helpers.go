@@ -16,7 +16,7 @@ func verifyPluginParameters(variables []string) {
 	}
 }
 
-func writeResult(results os.File, fields map[string]string) {
+func writeResult(results *os.File, fields map[string]string) {
 	for f, v := range fields {
 		line := fmt.Sprintf("%s=\"%s\"\n", f, strings.ReplaceAll(v, "\"", "\\\""))
 		fmt.Print(line)

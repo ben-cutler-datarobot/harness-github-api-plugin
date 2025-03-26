@@ -31,14 +31,14 @@ func main() {
 	if strings.Contains(commands, "getPrDetails") {
 		verifyPluginParameters([]string{"PLUGIN_PR_NUMBER"})
 		fields := getPullRequest(client, &ctx, repositoryName, repositoryOwner, os.Getenv("PLUGIN_PR_NUMBER"))
-		writeResult(*results, fields)
+		writeResult(results, fields)
 	}
 	if strings.Contains(commands, "getChangedFiles") {
 		verifyPluginParameters([]string{"PLUGIN_PR_NUMBER"})
 		prFields := getPullRequest(client, &ctx, repositoryName, repositoryOwner, os.Getenv("PLUGIN_PR_NUMBER"))
 		//writeResult(*results, prFields)
 		fields := getChanges(client, &ctx, repositoryName, repositoryOwner, prFields["BASE_SHA"], prFields["HEAD_SHA"])
-		writeResult(*results, fields)
+		writeResult(results, fields)
 	}
 	if strings.Contains(commands, "setTag") {
 		verifyPluginParameters([]string{"PLUGIN_TAG_NAME", "PLUGIN_SHA"})
@@ -53,7 +53,7 @@ func main() {
 			os.Getenv("PLUGIN_PR_TITLE"),
 			os.Getenv("PLUGIN_PR_BODY"),
 			os.Getenv("PLUGIN_PR_LABELS"))
-		writeResult(*results, fields)
+		writeResult(results, fields)
 	}
 	if strings.Contains(commands, "AddPullRequestLabels") {
 		verifyPluginParameters([]string{"PLUGIN_PR_NUMBER", "PLUGIN_PR_LABELS"})
@@ -77,7 +77,7 @@ func main() {
 	if strings.Contains(commands, "getStatuses") {
 		verifyPluginParameters([]string{"PLUGIN_REF"})
 		fields := listStatusChecks(client, &ctx, repositoryName, repositoryOwner, os.Getenv("PLUGIN_REF"))
-		writeResult(*results, fields)
+		writeResult(results, fields)
 	}
 	if strings.Contains(commands, "waitForStatus") {
 		verifyPluginParameters([]string{"PLUGIN_REF", "PLUGIN_STATUS_CHECK_CONTEXT"})
@@ -85,7 +85,7 @@ func main() {
 			os.Getenv("PLUGIN_REF"),
 			os.Getenv("PLUGIN_STATUS_CHECK_CONTEXT"),
 			os.Getenv("PLUGIN_STATUS_CHECK_WAIT_TIMEOUT"))
-		writeResult(*results, fields)
+		writeResult(results, fields)
 	}
 	if strings.Contains(commands, "mergePr") {
 		verifyPluginParameters([]string{"PLUGIN_PR_NUMBER"})
@@ -96,7 +96,7 @@ func main() {
 	if strings.Contains(commands, "getRef") {
 		verifyPluginParameters([]string{"PLUGIN_REF"})
 		fields := getRef(client, &ctx, repositoryName, repositoryOwner, os.Getenv("PLUGIN_REF"))
-		writeResult(*results, fields)
+		writeResult(results, fields)
 	}
 	results.Close()
 
