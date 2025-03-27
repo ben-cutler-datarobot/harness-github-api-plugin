@@ -33,3 +33,12 @@ func failOnErr(err error) {
 		log.Fatal(err)
 	}
 }
+
+func verifyCommand(command string, commands []string) {
+	for _, word := range words {
+		if strings.Contains(command, word) {
+			return true
+		}
+	}
+	return false
+}
