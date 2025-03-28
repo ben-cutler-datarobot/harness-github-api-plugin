@@ -32,7 +32,6 @@ func main() {
 
 	results, err := os.Create(outputFile)
 	failOnErr(err)
-	ranCommand:= false
 	if strings.Contains(commands, "getPrDetails") {
 		verifyPluginParameters([]string{"PLUGIN_PR_NUMBER"})
 		fields := getPullRequest(client, &ctx, repositoryName, repositoryOwner, os.Getenv("PLUGIN_PR_NUMBER"))

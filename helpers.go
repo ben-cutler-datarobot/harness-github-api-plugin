@@ -35,8 +35,8 @@ func failOnErr(err error) {
 }
 
 func verifyCommand(command string, commands []string) {
-	for _, word := range words {
-		if strings.Contains(command, word) {
+	for _, word := range commands {
+		if strings.Contains(command, commands) {
 			return true
 		}
 	}
